@@ -1,0 +1,98 @@
+#+TITLE: Search V2 Pools
+
+# TODO: add link to graviton.one
+Uniswap V2 is now on every evm-compatible chain, and Graviton is now on every Uniswap V2. New pools have started to crop up and we keep up with them at graviton.one stats.
+For this we use Etherscan, fortunately they keep up with the new evm chains, e.g. polygonscan has appeared just recently.
+Here's how I check new pools.
+
+#+begin_src org
+# sushi-eth factory
+factory           0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac
+# topic0 of the PairCreated event, same on all forks of uniswapV2
+PairCreatedTopic0 0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9
+# address of our token in bytes32
+gton token        0x00000000000000000000000001e0e2e61f554ecaaec0cc933e739ad90f24a86d
+# token appeared around this time
+fromBlock         12295621 (23 april)
+# a spare etherescan.io api key
+apikey            MVDAGI47HWEDTM22SNPKHHS5782GWZ8A4R
+#+end_src
+
+# TODO: add link
+Now we build a url according to etherscan documentation, searching for all pairs created where GTON is the first token
+[[https://api.etherscan.io/api?module=logs&action=getLogs&fromBlock=12295621&toBlock=latest&address=0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac&topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&topic1=0x00000000000000000000000001e0e2e61f554ecaaec0cc933e739ad90f24a86d&apikey=MVDAGI47HWEDTM22SNPKHHS5782GWZ8A4R][url]]
+#+begin_src url
+https://api.etherscan.io/api
+?module=logs&
+action=getLogs&
+fromBlock=12295621&
+toBlock=latest&
+address=0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac&
+topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&
+topic1=0x00000000000000000000000001e0e2e61f554ecaaec0cc933e739ad90f24a86d&
+apikey=MVDAGI47HWEDTM22SNPKHHS5782GWZ8A4R
+#+end_src
+And now in the opposite direction, all pairs where GTON is the second token
+[[https://api.etherscan.io/api?module=logs&action=getLogs&fromBlock=12295621&toBlock=latest&address=0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac&topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&topic2=0x00000000000000000000000001e0e2e61f554ecaaec0cc933e739ad90f24a86d&apikey=MVDAGI47HWEDTM22SNPKHHS5782GWZ8A4R][url]]
+#+begin_src url
+https://api.etherscan.io/api
+?module=logs&
+action=getLogs&
+fromBlock=12295621&
+toBlock=latest&
+address=0xc0aee478e3658e2610c5f7a4a2e1777ce9e4f2ac&
+topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&
+topic2=0x00000000000000000000000001e0e2e61f554ecaaec0cc933e739ad90f24a86d&
+apikey=MVDAGI47HWEDTM22SNPKHHS5782GWZ8A4R
+#+end_src
+
+We get a json with two pools, gton/weth and gton/usdc. The opposite direction does not return pairs.
+#+ATTR_ORG: :width 500
+[[./img1.png]]
+
+Now we can copy the `transactionHash` and paste it into etherscan to get info on the transaction that initiated the pool.
+https://etherscan.io/tx/0xa097d91a43bf824ca0e44a045dd682fdce07efb66e5d2eaacc64cb5ad1a61d3f
+#+ATTR_ORG: :width 500
+[[./img2.png]]
+
+Let's do the same with pancake
+#+begin_quote
+,# pancake factory
+factory           0xca143ce32fe78f1f7019d7d551a6402fc5350c73
+,# topic0 of the PairCreated event, same on all forks of uniswapV2
+PairCreatedTopic0 0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9
+,# address of our token in bytes32
+gton token        0x00000000000000000000000064D5BaF5ac030e2b7c435aDD967f787ae94D0205
+,# token appeared around this time
+fromBlock         7000000 (29 april)
+,# a spare bscscan.com api key
+apikey            8564KSCEASA2M6MP1UHEU54I3NDC787Q4M
+#+end_quote
+[[https://api.bscscan.com/api?module=logs&action=getLogs&fromBlock=4332587&toBlock=latest&address=0xca143ce32fe78f1f7019d7d551a6402fc5350c73&topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&topic1=0x00000000000000000000000064D5BaF5ac030e2b7c435aDD967f787ae94D0205&apikey=8564KSCEASA2M6MP1UHEU54I3NDC787Q4M][url]]
+#+begin_src url
+https://api.bscscan.com/api?
+module=logs&
+action=getLogs&
+fromBlock=4332587&
+toBlock=latest&
+address=0xca143ce32fe78f1f7019d7d551a6402fc5350c73&
+topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&
+topic1=0x00000000000000000000000064D5BaF5ac030e2b7c435aDD967f787ae94D0205&
+apikey=8564KSCEASA2M6MP1UHEU54I3NDC787Q4M
+#+end_src
+[[https://api.bscscan.com/api?module=action=getLogs&fromBlock=4332587&toBlock=latest&address=0xca143ce32fe78f1f7019d7d551a6402fc5350c73&topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&topic2=0x00000000000000000000000064D5BaF5ac030e2b7c435aDD967f787ae94D0205&apikey=8564KSCEASA2M6MP1UHEU54I3NDC787Q4M][url]]
+#+begin_src url
+https://api.bscscan.com/api?
+module=logs&
+action=getLogs&
+fromBlock=4332587&
+toBlock=latest&
+address=0xca143ce32fe78f1f7019d7d551a6402fc5350c73&
+topic0=0x0d3648bd0f6ba80134a33ba9275ac585d9d315f0ad8355cddefde31afa28d0e9&
+topic2=0x00000000000000000000000064D5BaF5ac030e2b7c435aDD967f787ae94D0205&
+apikey=8564KSCEASA2M6MP1UHEU54I3NDC787Q4M
+#+end_src
+
+Here we get three pools, gton/busd, gton/wbnb and gton/usdc. The opposite direction does not return pairs.
+#+ATTR_ORG: :width 500
+[[./img3.png]]
